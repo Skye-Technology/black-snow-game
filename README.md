@@ -123,7 +123,9 @@ npm run import:characters
 npm run import:characters -- --from /path/to/zips
 ```
 
-The script ([`scripts/import-characters.mjs`](scripts/import-characters.mjs)) needs no Blender. Every part in these packs is skinned to the same 65-bone skeleton, so it:
+The script ([`scripts/import-characters.mjs`](scripts/import-characters.mjs)) needs no Blender: its tools (glTF Transform, meshoptimizer and sharp) are dev dependencies, installed by `npm install`. It also calls the system `unzip` command, which macOS and Linux include; on Windows, run it from WSL or Git Bash.
+
+Every part in these packs is skinned to the same 65-bone skeleton, so the script:
 
 1. Combines each outfit with a head (cut from the base body by bone weights), eyes, eyebrows and hair, re-binding every part to one skeleton by bone name.
 2. Converts textures to WebP (1024 px colour, 512 px normal and ORM maps) and compresses meshes with meshopt. That takes the source files from about 300 MB down to 0.5–0.75 MB per character.
@@ -150,7 +152,8 @@ No environment variables or backend are needed.
 ## Credits
 
 - Character models and animations: [Quaternius](https://quaternius.com), CC0 1.0.
-- Built with [Next.js](https://nextjs.org), [React Three Fiber](https://r3f.docs.pmnd.rs), [three.js](https://threejs.org), [zustand](https://zustand.docs.pmnd.rs) and [glTF Transform](https://gltf-transform.dev).
+- Built with [Next.js](https://nextjs.org), [React Three Fiber](https://r3f.docs.pmnd.rs) and [drei](https://drei.docs.pmnd.rs), [three.js](https://threejs.org) and [zustand](https://zustand.docs.pmnd.rs).
+- Character pipeline: [glTF Transform](https://gltf-transform.dev), [meshoptimizer](https://github.com/zeux/meshoptimizer) and [sharp](https://sharp.pixelplumbing.com).
 
 ## License
 

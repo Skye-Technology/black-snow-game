@@ -16,13 +16,10 @@
   "dependencies": {
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.2",
-    "@react-three/rapier": "^2.2.0",
-    "lucide-react": "^1.57.0",
     "next": "^16.4.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "three": "^0.186.1",
-    "tsx": "^4.23.15",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
@@ -32,6 +29,9 @@
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/three": "^0.186.0",
+    "meshoptimizer": "^1.1.1",
+    "sharp": "^0.35.5",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }
