@@ -1,0 +1,297 @@
+:root {
+  --ink: #e9e4da;
+  --muted: #9c968c;
+  --blood: #b3261e;
+  --amber: #e8a64a;
+  --bg: #05070c;
+  --serif: Georgia, 'Times New Roman', serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.game {
+  position: fixed;
+  inset: 0;
+  user-select: none;
+}
+
+.game canvas {
+  transition: filter 0.25s ease;
+}
+
+/* Bullet time: drain the colour and push the contrast. */
+.game.slowmo canvas {
+  filter: saturate(0.3) sepia(0.35) contrast(1.08) brightness(1.2);
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  text-shadow: 0 1px 2px #000;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(20, 12, 4, 0.85) 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.slowmo .vignette {
+  opacity: 1;
+}
+
+.hurt-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(160, 10, 10, 0.65) 100%);
+  animation: fade 0.45s ease-out forwards;
+}
+
+.crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+.hit-marker {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  background:
+    linear-gradient(45deg, transparent 46%, #fff 46%, #fff 54%, transparent 54%),
+    linear-gradient(-45deg, transparent 46%, #fff 46%, #fff 54%, transparent 54%);
+  mask: radial-gradient(circle, transparent 5px, #000 6px);
+  animation: fade 0.18s ease-out forwards;
+}
+
+.wave-banner {
+  position: absolute;
+  top: 28%;
+  width: 100%;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 44px;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  animation: banner 2.4s ease-out forwards;
+}
+
+.hud-top {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  display: flex;
+  gap: 22px;
+  color: var(--muted);
+}
+
+.hud-left {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  width: 240px;
+}
+
+.meter-label {
+  margin: 10px 0 5px;
+  color: var(--muted);
+}
+
+.meter-label em {
+  font-style: normal;
+  color: var(--amber);
+}
+
+.meter {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.meter-fill {
+  height: 100%;
+  transition: width 0.15s linear;
+}
+
+.meter-fill.health {
+  background: var(--ink);
+}
+
+.meter-fill.health.low {
+  background: var(--blood);
+  animation: pulse 0.8s ease-in-out infinite;
+}
+
+.meter-fill.bt {
+  background: #a07a3c;
+}
+
+.meter-fill.bt.active {
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+}
+
+.hud-right {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+}
+
+.ammo {
+  font-family: var(--serif);
+  font-size: 46px;
+  letter-spacing: 0;
+}
+
+.ammo small {
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.reloading {
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+}
+
+/* ---------- Overlays ---------- */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  cursor: pointer;
+  text-align: center;
+  background: radial-gradient(ellipse at center, rgba(5, 7, 12, 0.35), rgba(5, 7, 12, 0.88));
+}
+
+.overlay.dead {
+  background: radial-gradient(ellipse at center, rgba(60, 4, 4, 0.45), rgba(5, 2, 2, 0.92));
+}
+
+.overlay h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: normal;
+  font-size: clamp(44px, 10vw, 96px);
+  letter-spacing: 0.04em;
+}
+
+.overlay .sub {
+  margin: 8px 0 28px;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, auto));
+  gap: 8px 32px;
+  margin: 0 0 32px;
+  font-size: 13px;
+}
+
+.controls div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.controls dt {
+  color: var(--amber);
+}
+
+.controls dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+.cta {
+  font: inherit;
+  color: var(--ink);
+  background: none;
+  border: 1px solid rgba(233, 228, 218, 0.5);
+  padding: 12px 28px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  cursor: pointer;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@media (max-width: 560px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+  .hud-left {
+    width: 160px;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes banner {
+  0% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+  15%,
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
